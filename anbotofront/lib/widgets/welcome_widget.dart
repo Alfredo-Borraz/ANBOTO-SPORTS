@@ -10,7 +10,7 @@ class WelcomeWidget extends StatelessWidget {
     return Column(children: [
       Center(
         child: SvgPicture.asset(
-          "assets/images/logo_picture.svg",
+          "assets/images/iconsport.svg",
           width: 400.0,
         ),
       ),

@@ -20,8 +20,8 @@ class CreateAccountBottomSheetBodyWidget extends StatelessWidget {
               height: 15,
             ),
             const BottomSheetHeaderWidget(
-              massegeTitle: "Hello...",
-              nameSubTitle: "Register",
+              massegeTitle: "Hola...",
+              nameSubTitle: "Registrate",
             ),
             const SizedBox(
               height: 25,
@@ -34,7 +34,7 @@ class CreateAccountBottomSheetBodyWidget extends StatelessWidget {
               height: 10,
             ),
             BottomSheetFooterWidget(
-              messageText: "Already have account? ",
+              messageText: "Ya tienes una cuenta? ",
               actionText: "Login",
               onTap: () {
                 Navigator.pop(context);

@@ -18,7 +18,6 @@ class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _courseController = TextEditingController();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
   @override
@@ -29,7 +28,7 @@ class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
       child: Column(
         children: [
           CustomTextFormFieldWidget(
-            labelText: "username/email",
+            labelText: "Correo Electronico",
             hintText: "info@example.com",
             controller: _emailController,
             validator: Validations.validateEmailOrUsername,
@@ -45,26 +44,12 @@ class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
           const SizedBox(
             height: 20,
           ),
-          CustomTextFormFieldWidget(
-            labelText: "course",
-            hintText: "course name",
-            controller: _courseController,
-            validator: Validations.validateString,
-            suffixFocusedIcon: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Color(0xff050522),
-            ),
-            suffixIcon: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Color(0xffA0936B),
-            ),
-          ),
           const SizedBox(
             height: 20,
           ),
           CustomTextFormFieldWidget(
-            labelText: "password",
-            hintText: "write strong password",
+            labelText: "Contraseña",
+            hintText: "ingresa tu contraseña",
             controller: _passwordController,
             obscureText: true,
             validator: Validations.validatePassword,
@@ -73,8 +58,8 @@ class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
             height: 20,
           ),
           CustomTextFormFieldWidget(
-            labelText: "confirm password",
-            hintText: "write password again",
+            labelText: "Confirma tu contraseña",
+            hintText: "Ingresa tu contraseña",
             controller: _confirmPasswordController,
             obscureText: true,
             validator: (value) {
@@ -86,7 +71,7 @@ class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
             height: 20,
           ),
           CustomElevatedButtonWidget(
-            buttonText: "Register",
+            buttonText: "Registro",
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Navigator.pop(context);

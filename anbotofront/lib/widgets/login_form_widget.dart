@@ -29,7 +29,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
       child: Column(
         children: [
           CustomTextFormFieldWidget(
-            labelText: "username/email",
+            labelText: "Correo Electronico",
             hintText: "info@example.com",
             controller: _emailController,
             validator: Validations.validateEmailOrUsername,
@@ -46,8 +46,8 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
             height: 20,
           ),
           CustomTextFormFieldWidget(
-            labelText: "password",
-            hintText: "write your password here",
+            labelText: "Contraseña",
+            hintText: "Escribe tu contraseña",
             controller: _passwordController,
             obscureText: true,
             validator: Validations.validatePassword,
@@ -66,14 +66,14 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 },
               ),
               Text(
-                'Remember me',
+                'Recordar',
                 style: (isValidateCheckbox && !isChecked)
                     ? AppStyle.styleRegular15
                         .copyWith(color: const Color(0xffb42921))
                     : AppStyle.styleRegular15,
               ),
               const Spacer(),
-              const Text('Forgot Password ?'),
+              const Text('¿Se te olvido la contraseña?'),
             ],
           ),
           CustomElevatedButtonWidget(

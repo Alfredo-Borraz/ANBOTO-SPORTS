@@ -20,7 +20,7 @@ class LoginBottomSheetBodyWidget extends StatelessWidget {
               height: 15,
             ),
             const BottomSheetHeaderWidget(
-              massegeTitle: "Welcome Back!!!",
+              massegeTitle: "Bienvenido de nuevo",
               nameSubTitle: "Login",
             ),
             const SizedBox(
@@ -34,8 +34,8 @@ class LoginBottomSheetBodyWidget extends StatelessWidget {
               height: 10,
             ),
             BottomSheetFooterWidget(
-              messageText: "Don`t have an account? ",
-              actionText: "Register",
+              messageText: "¿No tienes una cuenta? ",
+              actionText: "Registrate",
               onTap: () {
                 Navigator.pop(context);
                 viewBottomSheet(
