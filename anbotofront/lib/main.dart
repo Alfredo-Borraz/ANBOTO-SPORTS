@@ -1,5 +1,6 @@
-import 'package:anbotofront/views/welcome_view.dart';
 import 'package:flutter/material.dart';
+
+import 'screens/chat_screen.dart'; // Ajusta la ruta si es necesario
 
 void main() {
   runApp(const MyApp());
@@ -8,12 +9,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application
+  // Este widget es la raíz de tu aplicación
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomeView(),
+      home: ChatScreen(),
     );
   }
 }
