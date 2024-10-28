@@ -1,7 +1,5 @@
+import 'package:anbotofront/pages/SearchPage.dart';
 import 'package:anbotofront/pages/chatRoomPage.dart';
-import 'package:chatapp/screens/ChatRoomPage.dart';
-import 'package:chatapp/screens/LoginPage.dart';
-import 'package:chatapp/screens/SearchPage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,7 +10,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Lista de chats simulada
   final List<Map<String, String>> chatRooms = [
     {
       'name': 'usuario_1',
@@ -37,22 +34,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Chat App"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return LoginPage();
-                  },
-                ),
-              );
-            },
-            icon: const Icon(Icons.exit_to_app),
-          ),
-        ],
       ),
       body: SafeArea(
         child: ListView.builder(
@@ -88,7 +69,7 @@ class _HomePageState extends State<HomePage> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return SearchPage();
+                return const SearchPage();
               },
             ),
           );
@@ -97,12 +78,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-class SearchPage {
-  const SearchPage();
-}
-
-class LoginPage {
-  const LoginPage();
 }

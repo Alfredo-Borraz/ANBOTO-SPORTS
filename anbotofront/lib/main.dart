@@ -1,6 +1,4 @@
 import 'package:anbotofront/pages/HomePage.dart';
-import 'package:chatapp/screens/HomePage.dart';
-import 'package:chatapp/screens/LoginPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,21 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
-    );
-  }
-}
-
-class MyAppLoggedIn extends StatelessWidget {
-  const MyAppLoggedIn({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
