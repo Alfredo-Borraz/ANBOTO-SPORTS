@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  // Simulación del estado de inicio de sesión
-  bool get isloggedInUser => false; // Cambia esto a tu lógica de autenticación
+  bool get isloggedInUser => false;
 
   @override
   Widget build(BuildContext context) {
