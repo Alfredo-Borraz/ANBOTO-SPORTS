@@ -38,6 +38,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   image_cropper: ^8.0.2
   image_picker: ^1.1.2
+  socket_io_client: ^2.0.0
+  shared_preferences: ^2.0.6
+  jwt_decoder: ^2.0.1
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

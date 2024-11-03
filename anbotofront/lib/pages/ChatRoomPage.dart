@@ -1,15 +1,20 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatRoomPage extends StatefulWidget {
   final String targetUserName;
   final String targetUserProfilePic;
+  final int senderId; // ID del usuario actual
+  final int receiverId; // ID del usuario destino
 
   const ChatRoomPage({
     Key? key,
     required this.targetUserName,
     required this.targetUserProfilePic,
+    required this.senderId,
+    required this.receiverId,
   }) : super(key: key);
 
   @override
@@ -18,17 +23,67 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   TextEditingController messageController = TextEditingController();
-  List<String> messages = [];
+  List<Map<String, dynamic>> messages = []; // Lista de mensajes con detalles
+  late IO.Socket socket;
+
+  @override
+  void initState() {
+    super.initState();
+    connectSocket();
+  }
+
+  void connectSocket() {
+    // Configuración de la conexión con Socket.IO
+    socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+
+    socket.connect();
+
+    // Unirse a la sala única entre estos dos usuarios
+    socket.emit('joinRoom', {
+      'sender_id': widget.senderId,
+      'receiver_id': widget.receiverId,
+    });
+
+    // Escucha cuando un mensaje es recibido
+    socket.on('receiveMessage', (data) {
+      setState(() {
+        messages.insert(0, {
+          'message': data['message'],
+          'isMe': data['sender_id'] == widget.senderId,
+        });
+      });
+    });
+  }
 
   void sendMessage() {
     String msg = messageController.text.trim();
     if (msg.isNotEmpty) {
+      // Envía el mensaje al servidor
+      socket.emit('sendMessage', {
+        'sender_id': widget.senderId,
+        'receiver_id': widget.receiverId,
+        'message': msg,
+      });
+
       setState(() {
-        messages.insert(0, msg);
+        messages.insert(0, {
+          'message': msg,
+          'isMe': true,
+        });
         messageController.clear();
         log("Message Sent!");
       });
     }
+  }
+
+  @override
+  void dispose() {
+    socket.dispose(); // Cierra la conexión cuando se cierra la pantalla
+    messageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,8 +112,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    String currentMessage = messages[index];
-                    bool isMe = (index % 2 == 0);
+                    var currentMessage = messages[index];
+                    bool isMe = currentMessage['isMe'];
 
                     return Row(
                       mainAxisAlignment: isMe
@@ -76,7 +131,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
-                            currentMessage,
+                            currentMessage['message'],
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
