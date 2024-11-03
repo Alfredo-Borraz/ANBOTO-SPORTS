@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:anbotofront/helper/auth_service.dart';
+import 'package:anbotofront/pages/ChatRoomPage.dart';
 import 'package:anbotofront/pages/SearchPage.dart';
-import 'package:anbotofront/pages/chatRoomPage.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,23 +14,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, String>> chatRooms = [
-    {
-      'name': 'usuario_1',
-      'lastMessage': 'Hola 1',
-      'profilePic': 'assets/images/user1.jpg'
-    },
-    {
-      'name': 'usuario_2',
-      'lastMessage': 'Hola 2',
-      'profilePic': 'assets/images/user2.jpg'
-    },
-    {
-      'name': 'usuario_3',
-      'lastMessage': 'Hola 3',
-      'profilePic': 'assets/images/user3.jpg'
-    },
-  ];
+  List<dynamic> chatRooms =
+      []; // Lista para almacenar los chats del usuario actual
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserChats(); // Obtiene los chats al iniciar la página
+  }
+
+  Future<void> fetchUserChats() async {
+    String? token =
+        await AuthService().getToken(); // Obtiene el token del usuario
+    if (token == null) {
+      print("Usuario no autenticado.");
+      return;
+    }
+
+    final url = Uri.parse('http://127.0.0.1:8000/api/chats/user-chats');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token', // Envía el token en la cabecera
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        chatRooms = json.decode(response.body);
+      });
+    } else {
+      print("Error al obtener los chats del usuario");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +67,23 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) {
                       return ChatRoomPage(
-                        targetUserName: chatRoom['name']!,
-                        targetUserProfilePic: chatRoom['profilePic']!,
+                        targetUserName: chatRoom['name'],
+                        targetUserProfilePic: chatRoom['profilePic'] ??
+                            'assets/images/default_avatar.png',
+                        senderId:
+                            chatRoom['chatUserId'], // ID del usuario actual
+                        receiverId: chatRoom['chatUserId'],
                       );
                     },
                   ),
                 );
               },
               leading: CircleAvatar(
-                backgroundImage: AssetImage(chatRoom['profilePic']!),
+                backgroundImage: NetworkImage(chatRoom['profilePic'] ??
+                    'assets/images/default_avatar.png'),
               ),
-              title: Text(chatRoom['name']!),
-              subtitle: Text(chatRoom['lastMessage']!),
+              title: Text(chatRoom['name']),
+              subtitle: Text(chatRoom['lastMessage']),
             );
           },
         ),
