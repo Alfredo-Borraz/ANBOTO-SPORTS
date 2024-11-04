@@ -25,8 +25,7 @@ class MessageBubble extends StatelessWidget {
           if (!isMe)
             const CircleAvatar(
               radius: 16,
-              backgroundImage:
-                  AssetImage('assets/images/user2.png'), // Puedes ajustar esto
+              backgroundImage: AssetImage('assets/images/user2.png'),
             ),
           const SizedBox(width: 8),
           Flexible(

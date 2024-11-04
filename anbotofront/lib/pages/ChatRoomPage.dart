@@ -6,8 +6,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class ChatRoomPage extends StatefulWidget {
   final String targetUserName;
   final String targetUserProfilePic;
-  final int senderId; // ID del usuario actual
-  final int receiverId; // ID del usuario destino
+  final int senderId;
+  final int receiverId;
 
   const ChatRoomPage({
     Key? key,
@@ -23,7 +23,7 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   TextEditingController messageController = TextEditingController();
-  List<Map<String, dynamic>> messages = []; // Lista de mensajes con detalles
+  List<Map<String, dynamic>> messages = [];
   late IO.Socket socket;
 
   @override
@@ -33,7 +33,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   void connectSocket() {
-    // Configuración de la conexión con Socket.IO
     socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -41,13 +40,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
     socket.connect();
 
-    // Unirse a la sala única entre estos dos usuarios
     socket.emit('joinRoom', {
       'sender_id': widget.senderId,
       'receiver_id': widget.receiverId,
     });
 
-    // Escucha cuando un mensaje es recibido
     socket.on('receiveMessage', (data) {
       setState(() {
         messages.insert(0, {
@@ -61,7 +58,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void sendMessage() {
     String msg = messageController.text.trim();
     if (msg.isNotEmpty) {
-      // Envía el mensaje al servidor
       socket.emit('sendMessage', {
         'sender_id': widget.senderId,
         'receiver_id': widget.receiverId,
@@ -81,7 +77,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   void dispose() {
-    socket.dispose(); // Cierra la conexión cuando se cierra la pantalla
+    socket.dispose();
     messageController.dispose();
     super.dispose();
   }

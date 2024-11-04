@@ -14,18 +14,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic> chatRooms =
-      []; // Lista para almacenar los chats del usuario actual
+  List<dynamic> chatRooms = [];
 
   @override
   void initState() {
     super.initState();
-    fetchUserChats(); // Obtiene los chats al iniciar la página
+    fetchUserChats();
   }
 
   Future<void> fetchUserChats() async {
-    String? token =
-        await AuthService().getToken(); // Obtiene el token del usuario
+    String? token = await AuthService().getToken();
     if (token == null) {
       print("Usuario no autenticado.");
       return;
@@ -35,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     final response = await http.get(
       url,
       headers: {
-        'Authorization': 'Bearer $token', // Envía el token en la cabecera
+        'Authorization': 'Bearer $token',
       },
     );
 
@@ -70,8 +68,7 @@ class _HomePageState extends State<HomePage> {
                         targetUserName: chatRoom['name'],
                         targetUserProfilePic: chatRoom['profilePic'] ??
                             'assets/images/default_avatar.png',
-                        senderId:
-                            chatRoom['chatUserId'], // ID del usuario actual
+                        senderId: chatRoom['chatUserId'],
                         receiverId: chatRoom['chatUserId'],
                       );
                     },

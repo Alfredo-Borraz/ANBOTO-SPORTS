@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:anbotofront/helper/auth_utils.dart'; // Importa auth_utils para obtener el userId
+import 'package:anbotofront/helper/auth_utils.dart';
 import 'package:anbotofront/pages/ChatRoomPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
-  List<dynamic> searchResults =
-      []; // Lista para almacenar los resultados de la búsqueda
+  List<dynamic> searchResults = [];
 
   Future<void> searchUsers() async {
     final query = searchController.text.trim();
@@ -36,7 +35,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> navigateToChatRoom(Map<String, dynamic> user) async {
-    int? senderId = await getUserId(); // Obtiene el ID del usuario actual
+    int? senderId = await getUserId();
 
     if (senderId != null) {
       Navigator.push(
@@ -55,7 +54,6 @@ class _SearchPageState extends State<SearchPage> {
       );
     } else {
       print("Usuario no autenticado.");
-      // Puedes mostrar un mensaje de error o redirigir al usuario a la pantalla de inicio de sesión
     }
   }
 
@@ -77,7 +75,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
               const SizedBox(height: 20),
               CupertinoButton(
-                onPressed: searchUsers, // Llama a la función de búsqueda
+                onPressed: searchUsers,
                 color: Theme.of(context).colorScheme.secondary,
                 child: const Text("Search"),
               ),
@@ -88,8 +86,7 @@ class _SearchPageState extends State<SearchPage> {
                   itemBuilder: (context, index) {
                     final user = searchResults[index];
                     return ListTile(
-                      onTap: () => navigateToChatRoom(
-                          user), // Navega a ChatRoom con el ID del usuario actual
+                      onTap: () => navigateToChatRoom(user),
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(user['profile_pic'] ??
                             'assets/images/default_avatar.png'),

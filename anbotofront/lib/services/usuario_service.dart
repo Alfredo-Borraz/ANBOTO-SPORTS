@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UsuarioService {
   final String baseUrl = 'http://127.0.0.1:8000/api/auth';
 
-  // Función para registrar un usuario
   Future<String?> register(
       String username, String password, String phone) async {
     final url = Uri.parse('$baseUrl/register');
@@ -27,7 +26,6 @@ class UsuarioService {
     }
   }
 
-  // Función para iniciar sesión
   Future<String?> login(String username, String password) async {
     final url = Uri.parse('$baseUrl/login');
     final response = await http.post(
@@ -46,7 +44,6 @@ class UsuarioService {
     }
   }
 
-  // Función para verificar el OTP y obtener el token JWT
   Future<bool> verifyOTP(String username, String otp) async {
     final url = Uri.parse('$baseUrl/verify-otp');
     final response = await http.post(
@@ -61,26 +58,23 @@ class UsuarioService {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       String token = data['token'];
-      await saveToken(token); // Guarda el token en SharedPreferences
+      await saveToken(token);
       return true;
     } else {
       return false;
     }
   }
 
-  // Función para guardar el token JWT en SharedPreferences
   Future<void> saveToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', token);
   }
 
-  // Función para obtener el token JWT de SharedPreferences
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('jwt_token');
   }
 
-  // Función para eliminar el token JWT de SharedPreferences (logout)
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt_token');
