@@ -9,22 +9,24 @@ class EventModel {
   final bool? invitationSent;
 
   EventModel({
-     this.id,
-     this.name,
-     this.information,
-     this.participantsCount,
-     this.participants,
-     this.invitationSent,
+    this.id,
+    this.name,
+    this.information,
+    this.participantsCount,
+    this.participants,
+    this.invitationSent,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
-      id: json['id'],
-      name: json['name'],
-      information: json['information'],
-      participantsCount: json['participants_count'],
-    participants: List<String>.from(jsonDecode(json['participants'])),
-       invitationSent: json['invitation_sent'] == 1,
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      information: json['information'] as String?,
+      participantsCount: json['participants_count'] as int?,
+      participants: json['participants'] is String
+          ? List<String>.from(jsonDecode(json['participants']) as List)
+          : List<String>.from(json['participants'] as List),
+      invitationSent: json['invitation_sent'] == 1,
     );
   }
 
@@ -33,9 +35,9 @@ class EventModel {
       'id': id,
       'name': name,
       'information': information,
-      'participantsCount': participantsCount,
-      'participants': participants,
-      'invitationSent': invitationSent,
+      'participants_count': participantsCount,
+      'participants': jsonEncode(participants),
+      'invitation_sent': invitationSent == true ? 1 : 0,
     };
   }
 }
