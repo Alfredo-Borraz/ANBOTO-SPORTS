@@ -13,7 +13,6 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bg = isMe ? Colors.blue[100] : Colors.grey[300];
-    final align = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     final radius = BorderRadius.circular(12);
 
     return Container(

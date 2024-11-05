@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final url = Uri.parse('http://127.0.0.1:8000/api/chats/user-chats');
+    final url = Uri.parse('http://192.168.100.8:8000/api/chats/user-chats');
     final response = await http.get(
       url,
       headers: {

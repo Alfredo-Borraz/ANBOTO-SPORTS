@@ -4,64 +4,62 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UsuarioService {
-  final String baseUrl = 'http://127.0.0.1:8000/api/auth';
+  final String baseUrl = 'http://10.10.0.57:8000/api/users';
 
   Future<String?> register(
-      String username, String password, String phone) async {
+      String username, String email, String phone, String password) async {
     final url = Uri.parse('$baseUrl/register');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'username': username,
-        'password': password,
-        'phone': phone,
-      }),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'username': username,
+          'email': email,
+          'phone': phone,
+          'password': password,
+        }),
+      );
 
-    if (response.statusCode == 201) {
-      return 'Usuario registrado con éxito';
-    } else {
-      return 'Error al registrar usuario';
+      if (response.statusCode == 201) {
+        return 'Usuario registrado con éxito';
+      } else if (response.statusCode == 400) {
+        final data = json.decode(response.body);
+        return data['message'] ?? 'Error al registrar usuario';
+      } else {
+        return 'Error inesperado al registrar usuario';
+      }
+    } catch (e) {
+      return 'Error de red o conexión';
     }
   }
 
-  Future<String?> login(String username, String password) async {
+  Future<String?> login(String email, String password) async {
     final url = Uri.parse('$baseUrl/login');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'username': username,
-        'password': password,
-      }),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': email,
+          'password': password,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      return 'OTP enviado, verifica tu teléfono';
-    } else {
-      return 'Usuario o contraseña incorrectos';
-    }
-  }
-
-  Future<bool> verifyOTP(String username, String otp) async {
-    final url = Uri.parse('$baseUrl/verify-otp');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'username': username,
-        'otp': otp,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      String token = data['token'];
-      await saveToken(token);
-      return true;
-    } else {
-      return false;
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        String token = data['token'];
+        await saveToken(token);
+        return 'Inicio de sesión exitoso';
+      } else if (response.statusCode == 404) {
+        return 'Usuario no encontrado';
+      } else if (response.statusCode == 401) {
+        return 'Contraseña incorrecta';
+      } else {
+        return 'Error al iniciar sesión';
+      }
+    } catch (e) {
+      return 'Error de red o conexión';
     }
   }
 

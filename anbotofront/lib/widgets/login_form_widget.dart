@@ -1,4 +1,5 @@
 import 'package:anbotofront/helper/show_snack.dart';
+import 'package:anbotofront/pages/HomePage.dart';
 import 'package:anbotofront/services/usuario_service.dart';
 import 'package:anbotofront/utils/app_style.dart';
 import 'package:anbotofront/utils/validations.dart';
@@ -23,21 +24,31 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
   final UsuarioService usuarioService = UsuarioService();
 
   Future<void> _login() async {
-    if (isChecked && _formKey.currentState!.validate()) {
-      String username = _emailController.text.trim();
+    if (!isChecked) {
+      setState(() {
+        isValidateCheckbox = true;
+      });
+      return;
+    }
+
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
 
-      String? token = await usuarioService.login(username, password);
+      String? message = await usuarioService.login(email, password);
+      print("Resultado del login: $message");
 
-      if (token != null) {
-        await usuarioService.saveToken(token);
-        showSnackBar(context, "Inicio de sesión exitoso");
-        Navigator.pop(context);
+      if (message == 'Inicio de sesión exitoso') {
+        showSnackBar(context, message ?? 'Inicio de sesion exitoso');
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
       } else {
-        showSnackBar(context, "Usuario o contraseña incorrectos");
+        showSnackBar(context, message ?? "Error al iniciar sesión");
       }
     } else {
-      isValidateCheckbox = true;
       autovalidateMode = AutovalidateMode.always;
       setState(() {});
     }
@@ -51,18 +62,10 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
       child: Column(
         children: [
           CustomTextFormFieldWidget(
-            labelText: "Correo Electronico",
+            labelText: "Correo Electrónico",
             hintText: "info@example.com",
             controller: _emailController,
             validator: Validations.validateEmailOrUsername,
-            suffixFocusedIcon: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Color(0xff050522),
-            ),
-            suffixIcon: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Color(0xffA0936B),
-            ),
           ),
           const SizedBox(height: 20),
           CustomTextFormFieldWidget(
