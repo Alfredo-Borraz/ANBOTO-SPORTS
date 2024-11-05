@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 class LeaderboardScreen extends StatelessWidget {
+  final Color darkBlue = Color(0xFF003366);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade900,
+      backgroundColor: darkBlue,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Tabla de posiciones',style:TextStyle(color: Colors.white) ,),
+        title: Text(
+          'Tabla de posiciones',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Column(
         children: [
@@ -34,7 +39,10 @@ class LeaderboardScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               'Estadísticas de los equipos',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
             ),
           ),
           Container(
@@ -45,10 +53,15 @@ class LeaderboardScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: darkBlue,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey.shade400,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Configuraciones'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
     );

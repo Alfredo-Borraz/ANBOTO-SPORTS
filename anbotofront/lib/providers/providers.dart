@@ -1,0 +1,1 @@
+export 'package:anbotofront/providers/eventos.dart';
