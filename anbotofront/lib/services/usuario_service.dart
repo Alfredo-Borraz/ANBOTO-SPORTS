@@ -8,7 +8,6 @@ class UsuarioService {
   final String baseUrl = 'http://192.168.100.8:8000/api/users';
   IO.Socket? socket;
 
-  // Inicializa y conecta el socket
   void initializeSocketConnection() {
     socket = IO.io('http://192.168.100.8:8000', <String, dynamic>{
       'transports': ['websocket'],
@@ -26,16 +25,27 @@ class UsuarioService {
     });
   }
 
-  // Únete a una sala de chat
-  void joinChatRoom(String senderId, String receiverId) {
-    final room = [senderId, receiverId].toList()..sort();
-    socket
-        ?.emit('joinRoom', {'sender_id': senderId, 'receiver_id': receiverId});
-    print('Usuario $senderId unido a la sala $room');
+  Future<void> joinChatRoom(int receiverId) async {
+    int? senderId = await getUserId();
+    if (senderId == null) {
+      print("Usuario no autenticado.");
+      return;
+    }
+
+    socket?.emit('joinRoom', {
+      'sender_id': senderId,
+      'receiver_id': receiverId,
+    });
+    print('Usuario $senderId unido a la sala con $receiverId');
   }
 
-  // Enviar un mensaje
-  void sendMessage(String senderId, String receiverId, String message) {
+  Future<void> sendMessage(int receiverId, String message) async {
+    int? senderId = await getUserId();
+    if (senderId == null) {
+      print("Usuario no autenticado.");
+      return;
+    }
+
     socket?.emit('sendMessage', {
       'sender_id': senderId,
       'receiver_id': receiverId,
@@ -43,14 +53,12 @@ class UsuarioService {
     });
   }
 
-  // Escuchar mensajes entrantes
   void listenForMessages(Function(dynamic) onMessageReceived) {
     socket?.on('receiveMessage', (data) {
       onMessageReceived(data);
     });
   }
 
-  // Registrar usuario
   Future<String?> register(
       String username, String email, String phone, String password) async {
     final url = Uri.parse('$baseUrl/register');
@@ -79,7 +87,6 @@ class UsuarioService {
     }
   }
 
-  // Iniciar sesión de usuario
   Future<String?> login(String email, String password) async {
     final url = Uri.parse('$baseUrl/login');
     try {
@@ -95,8 +102,10 @@ class UsuarioService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         String token = data['token'];
-        await saveToken(token);
-        initializeSocketConnection(); // Inicializar conexión de socket después de iniciar sesión
+        int userId = data['userId'];
+
+        await saveUserInfo(token, userId);
+        initializeSocketConnection();
         return 'Inicio de sesión exitoso';
       } else if (response.statusCode == 404) {
         return 'Usuario no encontrado';
@@ -110,22 +119,27 @@ class UsuarioService {
     }
   }
 
-  // Guardar token en SharedPreferences
-  Future<void> saveToken(String token) async {
+  Future<void> saveUserInfo(String token, int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', token);
+    await prefs.setInt('user_id', userId);
   }
 
-  // Obtener token de SharedPreferences
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('jwt_token');
+  }
+
+  Future<int?> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('user_id');
   }
 
   // Cerrar sesión
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt_token');
-    socket?.disconnect(); // Desconectar el socket al cerrar sesión
+    await prefs.remove('user_id');
+    socket?.disconnect();
   }
 }

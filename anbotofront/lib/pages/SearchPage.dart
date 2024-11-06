@@ -47,6 +47,7 @@ class _SearchPageState extends State<SearchPage> {
               targetUserProfilePic: 'assets/images/user1.jpg',
               senderId: senderId,
               receiverId: user['id'],
+              msg: [],
             );
           },
         ),

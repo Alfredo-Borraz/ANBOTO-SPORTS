@@ -15,11 +15,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic> chatConversations = [];
+  int? currentUserId;
 
   @override
   void initState() {
     super.initState();
-    fetchUserConversations();
+    initializeUserId();
+  }
+
+  Future<void> initializeUserId() async {
+    currentUserId = await AuthService().getUserId();
+    if (currentUserId == null) {
+      print("Usuario no autenticado.");
+    } else {
+      fetchUserConversations();
+    }
   }
 
   Future<void> fetchUserConversations() async {
@@ -30,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     final url =
-        Uri.parse('http://192.168.100.8:8000/api/chat/socket/conversacion');
+        Uri.parse('http://192.168.100.8:8000/api/chat/sockets/conversaciones');
     final response = await http.get(
       url,
       headers: {
@@ -47,6 +57,30 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<List<dynamic>> fetchChatMessages(int chatUserId) async {
+    String? token = await AuthService().getToken();
+    if (token == null) {
+      print("Usuario no autenticado.");
+      return [];
+    }
+
+    final url = Uri.parse(
+        'http://192.168.100.8:8000/api/chat/sockets/messages?userId=${currentUserId}&chatUserId=${chatUserId}');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      print("Error al obtener los mensajes entre usuarios");
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +94,9 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) {
             final conversation = chatConversations[index];
             return ListTile(
-              onTap: () {
+              onTap: () async {
+                List<dynamic> messages =
+                    await fetchChatMessages(conversation['chatUserId']);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -68,8 +104,9 @@ class _HomePageState extends State<HomePage> {
                       return ChatRoomPage(
                         targetUserName: conversation['name'],
                         targetUserProfilePic: 'assets/images/user1.jpg',
-                        senderId: conversation['chatUserId'],
+                        senderId: currentUserId!,
                         receiverId: conversation['chatUserId'],
+                        msg: messages,
                       );
                     },
                   ),

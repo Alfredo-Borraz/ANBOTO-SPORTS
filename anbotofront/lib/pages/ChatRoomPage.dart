@@ -8,6 +8,7 @@ class ChatRoomPage extends StatefulWidget {
   final String targetUserProfilePic;
   final int senderId;
   final int receiverId;
+  final List<dynamic> msg;
 
   const ChatRoomPage({
     Key? key,
@@ -15,6 +16,7 @@ class ChatRoomPage extends StatefulWidget {
     required this.targetUserProfilePic,
     required this.senderId,
     required this.receiverId,
+    required this.msg,
   }) : super(key: key);
 
   @override
@@ -23,12 +25,21 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   TextEditingController messageController = TextEditingController();
-  List<Map<String, dynamic>> messages = [];
+  late List<Map<String, dynamic>> messages;
   late IO.Socket socket;
 
   @override
   void initState() {
     super.initState();
+    messages = widget.msg
+        .map((message) => {
+              'message': message['message'],
+              'isMe': message['sender_id'] == widget.senderId,
+              'sentAt': DateTime.parse(message['sent_at']),
+            })
+        .toList();
+
+    messages.sort((a, b) => a['sentAt'].compareTo(b['sentAt']));
     connectSocket();
   }
 
@@ -47,10 +58,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
     socket.on('receiveMessage', (data) {
       setState(() {
-        messages.insert(0, {
+        messages.add({
           'message': data['message'],
           'isMe': data['sender_id'] == widget.senderId,
+          'sentAt': DateTime.parse(data['sent_at']),
         });
+
+        messages.sort((a, b) => a['sentAt'].compareTo(b['sentAt']));
       });
     });
   }
@@ -64,14 +78,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         'message': msg,
       });
 
-      setState(() {
-        messages.insert(0, {
-          'message': msg,
-          'isMe': true,
-        });
-        messageController.clear();
-        log("Message Sent!");
-      });
+      messageController.clear();
+      log("Message Sent!");
     }
   }
 
@@ -100,12 +108,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Chats
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ListView.builder(
-                  reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var currentMessage = messages[index];
@@ -116,19 +122,21 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: isMe
-                                ? Colors.grey
-                                : Theme.of(context).colorScheme.secondary,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            currentMessage['message'],
-                            style: const TextStyle(color: Colors.white),
+                        Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: isMe
+                                  ? Colors.grey
+                                  : Theme.of(context).colorScheme.secondary,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              currentMessage['message'],
+                              style: const TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
@@ -137,7 +145,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                 ),
               ),
             ),
-
             Container(
               color: Colors.grey[200],
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
