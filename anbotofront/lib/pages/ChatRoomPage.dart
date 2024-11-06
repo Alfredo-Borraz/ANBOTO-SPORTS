@@ -33,7 +33,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   void connectSocket() {
-    socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
+    socket = IO.io('http://192.168.100.8:8000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

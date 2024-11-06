@@ -21,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
     final query = searchController.text.trim();
     if (query.isNotEmpty) {
       final url =
-          Uri.parse('http://127.0.0.1:8000/api/users/search?query=$query');
+          Uri.parse('http://192.168.100.8:8000/api/users/search?query=$query');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -44,8 +44,7 @@ class _SearchPageState extends State<SearchPage> {
           builder: (context) {
             return ChatRoomPage(
               targetUserName: user['username'],
-              targetUserProfilePic:
-                  user['profile_pic'] ?? 'assets/images/default_avatar.png',
+              targetUserProfilePic: 'assets/images/user1.jpg',
               senderId: senderId,
               receiverId: user['id'],
             );
@@ -87,9 +86,10 @@ class _SearchPageState extends State<SearchPage> {
                     final user = searchResults[index];
                     return ListTile(
                       onTap: () => navigateToChatRoom(user),
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(user['profile_pic'] ??
-                            'assets/images/default_avatar.png'),
+                      leading: const CircleAvatar(
+                        backgroundImage: AssetImage(
+                          'assets/images/user1.jpg',
+                        ),
                         backgroundColor: Colors.grey,
                       ),
                       title: Text(user['username']),

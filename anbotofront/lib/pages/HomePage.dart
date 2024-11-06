@@ -14,22 +14,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic> chatRooms = [];
+  List<dynamic> chatConversations = [];
 
   @override
   void initState() {
     super.initState();
-    fetchUserChats();
+    fetchUserConversations();
   }
 
-  Future<void> fetchUserChats() async {
+  Future<void> fetchUserConversations() async {
     String? token = await AuthService().getToken();
     if (token == null) {
       print("Usuario no autenticado.");
       return;
     }
 
-    final url = Uri.parse('http://192.168.100.8:8000/api/chats/user-chats');
+    final url =
+        Uri.parse('http://192.168.100.8:8000/api/chat/socket/conversacion');
     final response = await http.get(
       url,
       headers: {
@@ -39,10 +40,10 @@ class _HomePageState extends State<HomePage> {
 
     if (response.statusCode == 200) {
       setState(() {
-        chatRooms = json.decode(response.body);
+        chatConversations = json.decode(response.body);
       });
     } else {
-      print("Error al obtener los chats del usuario");
+      print("Error al obtener las conversaciones previas del usuario");
     }
   }
 
@@ -55,9 +56,9 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: ListView.builder(
-          itemCount: chatRooms.length,
+          itemCount: chatConversations.length,
           itemBuilder: (context, index) {
-            final chatRoom = chatRooms[index];
+            final conversation = chatConversations[index];
             return ListTile(
               onTap: () {
                 Navigator.push(
@@ -65,22 +66,20 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) {
                       return ChatRoomPage(
-                        targetUserName: chatRoom['name'],
-                        targetUserProfilePic: chatRoom['profilePic'] ??
-                            'assets/images/default_avatar.png',
-                        senderId: chatRoom['chatUserId'],
-                        receiverId: chatRoom['chatUserId'],
+                        targetUserName: conversation['name'],
+                        targetUserProfilePic: 'assets/images/user1.jpg',
+                        senderId: conversation['chatUserId'],
+                        receiverId: conversation['chatUserId'],
                       );
                     },
                   ),
                 );
               },
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(chatRoom['profilePic'] ??
-                    'assets/images/default_avatar.png'),
+              leading: const CircleAvatar(
+                backgroundImage: AssetImage('assets/images/user1.jpg'),
               ),
-              title: Text(chatRoom['name']),
-              subtitle: Text(chatRoom['lastMessage']),
+              title: Text(conversation['name']),
+              subtitle: Text(conversation['lastMessage']),
             );
           },
         ),
