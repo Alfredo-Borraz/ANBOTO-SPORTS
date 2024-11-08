@@ -12,7 +12,6 @@ class TournamentsScreen extends StatefulWidget {
 class _TournamentsScreenState extends State<TournamentsScreen> {
   late EventosProvider eventosProvider;
   List<EventModel> eventsos = [];
-  final Color darkBlue = Color(0xFF003366);
 
   @override
   void initState() {
@@ -31,13 +30,16 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        backgroundColor: darkBlue,
-        title: const Text('Torneos disponibles',
-            style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.grey[900],
+        title: const Text(
+          'Torneos disponibles',
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pushReplacementNamed(context, 'profile'),
+          onPressed: () => Navigator.pushReplacementNamed(context, 'menu'),
         ),
       ),
       body: Padding(
@@ -46,12 +48,16 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
           children: [
             TextField(
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[800],
                 hintText: 'Buscar torneos',
-                prefixIcon: Icon(Icons.search, color: darkBlue),
+                hintStyle: TextStyle(color: Colors.grey[400]),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.filter_list, color: darkBlue),
+                  icon: const Icon(Icons.filter_list, color: Colors.white),
                   onPressed: () {
                     showModalBottomSheet(
+                      backgroundColor: Colors.grey[900],
                       context: context,
                       builder: (context) => FiltersModal(),
                     );
@@ -59,10 +65,7 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(color: darkBlue),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: darkBlue, width: 2),
+                  borderSide: BorderSide.none,
                 ),
               ),
             ),
@@ -75,16 +78,15 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: darkBlue,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey.shade400,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Configuraciones'),
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-        ],
+      bottomNavigationBar: Container(
+        color: Colors.grey[900],
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.grid_view, color: Colors.white),
+          ],
+        ),
       ),
     );
   }
@@ -125,16 +127,34 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
       children: [
         Text(
           title,
-          style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: darkBlue),
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         const SizedBox(height: 8),
         ...List.generate(tournaments.length, (index) {
           return Card(
+            color: Colors.grey[850],
             child: ListTile(
-              title: Text(tournaments[index].name!),
-              trailing: Text(
-                '${tournaments[index].participantsCount}/${tournaments[index].participants!.length}',
+              title: Text(
+                tournaments[index].name!,
+                style: const TextStyle(color: Colors.white),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.green),
+                    onPressed: () {
+                      // Acción para actualizar torneo
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      // Acción para eliminar torneo
+                    },
+                  ),
+                ],
               ),
             ),
           );
@@ -146,8 +166,6 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
 }
 
 class FiltersModal extends StatelessWidget {
-  final Color darkBlue = Color(0xFF003366);
-
   FiltersModal({Key? key}) : super(key: key);
 
   @override
@@ -157,45 +175,55 @@ class FiltersModal extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          const Text(
             'Filtros',
             style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: darkBlue),
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 20),
           TextField(
             decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[800],
               labelText: 'Ubicación',
+              labelStyle: TextStyle(color: Colors.grey[400]),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide.none,
               ),
             ),
           ),
           const SizedBox(height: 20),
           TextField(
             decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[800],
               labelText: 'Número de integrantes',
+              labelStyle: TextStyle(color: Colors.grey[400]),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide.none,
               ),
             ),
           ),
           const SizedBox(height: 20),
-          Text('Tipo de torneo', style: TextStyle(color: darkBlue)),
+          const Text('Tipo de torneo', style: TextStyle(color: Colors.white)),
           RadioListTile(
-            title: Text('Futbol', style: TextStyle(color: darkBlue)),
+            title: const Text('Futbol', style: TextStyle(color: Colors.white)),
             value: 'Futbol',
             groupValue: 'Futbol',
             onChanged: (value) {},
           ),
           RadioListTile(
-            title: Text('Basketball', style: TextStyle(color: darkBlue)),
+            title:
+                const Text('Basketball', style: TextStyle(color: Colors.white)),
             value: 'Basketball',
             groupValue: 'Futbol',
             onChanged: (value) {},
           ),
           RadioListTile(
-            title: Text('Volleyball', style: TextStyle(color: darkBlue)),
+            title:
+                const Text('Volleyball', style: TextStyle(color: Colors.white)),
             value: 'Volleyball',
             groupValue: 'Futbol',
             onChanged: (value) {},

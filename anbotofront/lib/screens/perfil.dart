@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
 class ProfileInfoScreen extends StatelessWidget {
-  final Color darkBlue = Color(0xFF003366); // Azul oscuro personalizado
+  final Color lightDarkBackground = Color(0xFF2C2C2C);
+  final Color accentColor = Color(0xFF1E88E5);
+  final Color textFieldColor = Color(0xFF3A3A3A);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Número de pestañas
+      length: 2,
       child: Scaffold(
+        backgroundColor: lightDarkBackground,
         appBar: AppBar(
-          backgroundColor: darkBlue,
-          title: const Text('Tu perfil', style: TextStyle(color: Colors.white)),
+          backgroundColor: lightDarkBackground,
+          title: const Text(
+            'Tu perfil',
+            style: TextStyle(color: Colors.white),
+          ),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -18,7 +24,7 @@ class ProfileInfoScreen extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           ),
           bottom: const TabBar(
-            indicatorColor: Colors.white,
+            indicatorColor: Color(0xFF1E88E5),
             tabs: [
               Tab(text: 'Perfil'),
               Tab(text: 'Multimedia'),
@@ -27,7 +33,6 @@ class ProfileInfoScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            // Contenido de la pestaña "Perfil"
             ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -35,76 +40,40 @@ class ProfileInfoScreen extends StatelessWidget {
                   child: Text(
                     "Información de jugador",
                     style: TextStyle(
-                      color: darkBlue,
-                      fontSize: 15,
+                      color: Colors.white,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 SizedBox(height: 16),
-                ListTile(
-                  leading: Icon(Icons.person, color: darkBlue),
-                  title: Text('Nombre'),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, 'edit');
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.calendar_today, color: darkBlue),
-                  title: Text('Fecha de nacimiento'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.person_outline, color: darkBlue),
-                  title: Text('Pronombres'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.wc, color: darkBlue),
-                  title: Text('Género'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.location_on, color: darkBlue),
-                  title: Text('Ubicación'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.height, color: darkBlue),
-                  title: Text('Estatura'),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, 'tournament');
-                  },
-                ),
+                _buildProfileListTile(context, Icons.person, 'Nombre'),
+                _buildProfileListTile(
+                    context, Icons.calendar_today, 'Fecha de nacimiento'),
+                _buildProfileListTile(
+                    context, Icons.person_outline, 'Pronombres'),
+                _buildProfileListTile(context, Icons.wc, 'Género'),
+                _buildProfileListTile(context, Icons.location_on, 'Ubicación'),
+                _buildProfileListTile(context, Icons.height, 'Estatura'),
                 SizedBox(height: 16),
                 Center(
                   child: Text(
                     "Deportes",
                     style: TextStyle(
-                      color: darkBlue,
-                      fontSize: 15,
+                      color: Colors.white,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 SizedBox(height: 16),
-                ListTile(
-                  leading: Icon(Icons.sports_soccer, color: darkBlue),
-                  title: Text('Fútbol'),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, 'tabla');
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.sports_basketball, color: darkBlue),
-                  title: Text('Baloncesto'),
-                  onTap: () =>
-                      Navigator.pushReplacementNamed(context, 'new_team'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.sports_volleyball, color: darkBlue),
-                  title: Text('Voleibol'),
-                  onTap: () => Navigator.pushReplacementNamed(context, 'admin'),
-                ),
+                _buildProfileListTile(context, Icons.sports_soccer, 'Fútbol'),
+                _buildProfileListTile(
+                    context, Icons.sports_basketball, 'Baloncesto'),
+                _buildProfileListTile(
+                    context, Icons.sports_volleyball, 'Voleibol'),
               ],
             ),
-            // Contenido de la pestaña "Multimedia"
             ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -112,8 +81,8 @@ class ProfileInfoScreen extends StatelessWidget {
                   child: Text(
                     "Tovar Pérez Turriate",
                     style: TextStyle(
-                      color: darkBlue,
-                      fontSize: 15,
+                      color: Colors.white,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -134,75 +103,44 @@ class ProfileInfoScreen extends StatelessWidget {
                 Text(
                   "Sobre mí",
                   style: TextStyle(
-                    color: darkBlue,
-                    fontSize: 15,
+                    color: Colors.white,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 16),
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkBlue),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkBlue, width: 2),
-                    ),
-                  ),
-                  maxLines: 4,
-                ),
+                _buildProfileTextField(context, 'Descripción sobre ti'),
                 SizedBox(height: 16),
                 Text(
                   'Participando en:',
                   style: TextStyle(
-                    color: darkBlue,
-                    fontSize: 15,
+                    color: Colors.white,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 8),
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkBlue),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkBlue, width: 2),
-                    ),
-                    labelText: 'Equipo 1\nEquipo 2',
-                  ),
-                  maxLines: 2,
-                ),
+                _buildProfileTextField(context, 'Equipo 1\nEquipo 2'),
                 SizedBox(height: 16),
                 Text(
                   'Logros:',
                   style: TextStyle(
-                    color: darkBlue,
-                    fontSize: 15,
+                    color: Colors.white,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 8),
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkBlue),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkBlue, width: 2),
-                    ),
-                    labelText: 'Equipo one: 38 puntos\nEquipo two: 20 puntos',
-                  ),
-                  maxLines: 2,
-                ),
+                _buildProfileTextField(
+                    context, 'Equipo one: 38 puntos\nEquipo two: 20 puntos'),
                 SizedBox(height: 16),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Acción del botón de editar perfil
+                      Navigator.pushReplacementNamed(context, 'edit');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: darkBlue,
+                      backgroundColor: accentColor,
                       padding:
                           EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -220,6 +158,42 @@ class ProfileInfoScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileListTile(
+      BuildContext context, IconData icon, String title) {
+    return ListTile(
+      leading: Icon(icon, color: accentColor),
+      title: Text(
+        title,
+        style: TextStyle(color: Colors.white),
+      ),
+      tileColor: textFieldColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+  }
+
+  Widget _buildProfileTextField(BuildContext context, String labelText) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(color: Colors.white70),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white70),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: accentColor, width: 2),
+        ),
+        filled: true,
+        fillColor: textFieldColor,
+      ),
+      style: TextStyle(color: Colors.white),
+      maxLines: labelText.contains('\n') ? 2 : 4,
     );
   }
 }
