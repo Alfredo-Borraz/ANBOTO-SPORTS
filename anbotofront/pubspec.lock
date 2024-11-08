@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dialog_alert:
+    dependency: "direct main"
+    description:
+      name: dialog_alert
+      sha256: f3781247ac5621bb9f159fd4b4b3a8ecedc1ce804f86f50212d6154f44745c12
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -496,6 +504,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      sha256: f38a505047f00743c988a3d5dc8f907a61b442fff7e5042cb2a03f6d822a7d89
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.4-nullsafety.1"
   shared_preferences:
     dependency: "direct main"
     description:
