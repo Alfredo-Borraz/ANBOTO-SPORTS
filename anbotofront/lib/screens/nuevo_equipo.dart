@@ -1,10 +1,10 @@
 import 'package:anbotofront/models/eventos.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
+import 'dart:convert'; // Asegúrate de importar esto para usar json
 import 'package:http/http.dart' as http;
 
-import '../providers/providers.dart';
-import 'package:anbotofront/models/eventos.dart';
+import '../providers/providers.dart'; // Asegúrate de tener esta importación para realizar solicitudes HTTP
+import 'package:anbotofront/models/eventos.dart'; // Import the correct EventModel
 
 class CreateTeamScreen extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
 
   void initState() {
     super.initState();
-    eventosProvider = EventosProvider();
+    eventosProvider = EventosProvider(); // Inicializar el provider aquí
   }
 
   void _createEvent() async {
@@ -43,12 +43,15 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
         invitationSent: invitationSent,
       );
 
-      bool success = await eventosProvider.createEvento(newEvent as EventModel);
+      bool success = await eventosProvider.createEvento(
+          newEvent as EventModel); // Llamar al método de creación del evento
 
       if (success) {
+        // Mostrar un mensaje de éxito o navegar a otra pantalla
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Evento creado exitosamente')),
         );
+        // Reiniciar campos después de crear el evento, si es necesario
         _formKey.currentState!.reset();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

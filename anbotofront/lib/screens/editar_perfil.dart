@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatelessWidget {
-  final Color darkBlue = Color(0xFF003366); // Azul oscuro personalizado
+  final Color darkBlue = Color(0xFF003366);
 
   @override
   Widget build(BuildContext context) {

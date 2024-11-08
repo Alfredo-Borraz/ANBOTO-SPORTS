@@ -8,7 +8,7 @@ class ProfileInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 2, // Número de pestañas
       child: Scaffold(
         backgroundColor: lightDarkBackground,
         appBar: AppBar(
@@ -33,6 +33,7 @@ class ProfileInfoScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
+            // Contenido de la pestaña "Perfil"
             ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -74,6 +75,7 @@ class ProfileInfoScreen extends StatelessWidget {
                     context, Icons.sports_volleyball, 'Voleibol'),
               ],
             ),
+            // Contenido de la pestaña "Multimedia"
             ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -161,6 +163,7 @@ class ProfileInfoScreen extends StatelessWidget {
     );
   }
 
+  // Widget para construir cada ListTile de perfil
   Widget _buildProfileListTile(
       BuildContext context, IconData icon, String title) {
     return ListTile(
@@ -176,6 +179,7 @@ class ProfileInfoScreen extends StatelessWidget {
     );
   }
 
+  // Widget para construir los TextFields personalizados en la sección multimedia
   Widget _buildProfileTextField(BuildContext context, String labelText) {
     return TextField(
       decoration: InputDecoration(

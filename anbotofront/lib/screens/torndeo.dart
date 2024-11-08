@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:anbotofront/providers/eventos.dart';
 import 'package:anbotofront/models/eventos.dart';
+import 'package:provider/provider.dart';
+import 'editar_equipo.dart';
 
 class TournamentsScreen extends StatefulWidget {
   const TournamentsScreen({Key? key}) : super(key: key);
@@ -145,13 +147,36 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.green),
                     onPressed: () {
-                      // Acción para actualizar torneo
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditarEquipoScreen(
+                            eventId: tournaments[index].id!,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      // Acción para eliminar torneo
+                      eventosProvider.deleteEvento(tournaments[index].id!).then(
+                        (success) {
+                          if (success) {
+                            fetchEvents();
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success
+                                    ? 'Torneo eliminado correctamente'
+                                    : 'Error al eliminar torneo',
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     },
                   ),
                 ],

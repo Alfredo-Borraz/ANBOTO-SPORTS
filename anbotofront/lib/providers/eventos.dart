@@ -9,12 +9,10 @@ class EventosProvider {
   // Método para obtener la lista de eventos
   Future<List<EventModel>> getEventos() async {
     final url = Uri.parse('$baseUrl/api/events');
-    print(url);
     final response = await http.get(url);
-    print(response.body);
     final List<dynamic> decodedData = json.decode(response.body);
     if (decodedData == null) return [];
-
+    events.clear();
     decodedData.forEach((evento) {
       final eventoTemp = EventModel.fromJson(evento);
       events.add(eventoTemp);
@@ -44,10 +42,29 @@ class EventosProvider {
             nuevoEvento.invitationSent! ? 1 : 0, // Usar 1 o 0 para booleano
       }),
     );
-
-    // Verificar si la respuesta fue exitosa
-    print(response.body);
-    print(response.statusCode);
     return response.statusCode == 201; // 201 es el código para "Creado"
+  }
+  Future<bool> updateEvento(EventModel evento) async {
+    final url = Uri.parse('$baseUrl/api/events/${evento.id}');
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': evento.name,
+        'information': evento.information,
+        'participants_count': evento.participantsCount,
+        'participants': evento.participants,
+        'invitation_sent': evento.invitationSent,
+      }),
+    );
+    return response.statusCode == 200; // 200 es el código para "OK"
+  }
+  Future<bool> deleteEvento(int id) async {
+    final url = Uri.parse('$baseUrl/api/events/$id');
+    final response = await http.delete(url);
+    print(response.body);
+    return response.statusCode == 200; // 200 es el código para "OK"
   }
 }

@@ -1,3 +1,4 @@
+import 'package:anbotofront/screens/editar_equipo.dart';
 import 'package:anbotofront/screens/menu_torneo.dart';
 import 'package:anbotofront/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,9 @@ class AppRoutes {
     'admin': (context) => ManageParticipantsScreen(),
     'tournament': (context) => TournamentsScreen(),
     'menu': (context) => MenuTorneo(),
+    'editar_equipo': (context) => EditarEquipoScreen(
+          eventId: ModalRoute.of(context)!.settings.arguments as int,
+        ),
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {

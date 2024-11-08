@@ -17,7 +17,7 @@ class ManageParticipantsScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Acción para regresar al menú
           },
         ),
         title: Text(
@@ -32,6 +32,7 @@ class ManageParticipantsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // Sección: Enviar una invitación
               Card(
                 color: cardColor,
                 shape: RoundedRectangleBorder(
@@ -243,7 +244,6 @@ class ManageParticipantsScreen extends StatelessWidget {
               ),
               SizedBox(height: 30),
 
-              // Botón para realizar cambios
               ElevatedButton(
                 onPressed: () {
                   // Acción para realizar cambios
