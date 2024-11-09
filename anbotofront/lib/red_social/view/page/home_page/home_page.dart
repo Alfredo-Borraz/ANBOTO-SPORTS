@@ -1,5 +1,4 @@
 import 'package:anbotofront/red_social/services/tournaments_service.dart';
-import 'package:anbotofront/red_social/view/page/profile_page/profile_page.dart';
 import 'package:anbotofront/red_social/view/page/upload_post_page/upload_post_page.dart';
 import 'package:anbotofront/red_social/view/widget/post_widget.dart';
 import 'package:flutter/material.dart';
@@ -54,11 +53,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.person, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const ProfilePage(),
-            ));
+            Navigator.pop(context);
           },
         ),
         actions: [

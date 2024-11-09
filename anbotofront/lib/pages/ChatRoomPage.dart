@@ -8,14 +8,16 @@ class ChatRoomPage extends StatefulWidget {
   final String targetUserProfilePic;
   final int senderId;
   final int receiverId;
+  final List<dynamic> msg;
 
   const ChatRoomPage({
-    Key? key,
+    super.key,
     required this.targetUserName,
     required this.targetUserProfilePic,
     required this.senderId,
     required this.receiverId,
-  }) : super(key: key);
+    required this.msg,
+  });
 
   @override
   _ChatRoomPageState createState() => _ChatRoomPageState();
@@ -23,17 +25,26 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   TextEditingController messageController = TextEditingController();
-  List<Map<String, dynamic>> messages = [];
+  late List<Map<String, dynamic>> messages;
   late IO.Socket socket;
 
   @override
   void initState() {
     super.initState();
+    messages = widget.msg
+        .map((message) => {
+              'message': message['message'],
+              'isMe': message['sender_id'] == widget.senderId,
+              'sentAt': DateTime.parse(message['sent_at']),
+            })
+        .toList();
+
+    messages.sort((a, b) => a['sentAt'].compareTo(b['sentAt']));
     connectSocket();
   }
 
   void connectSocket() {
-    socket = IO.io('http://127.0.0.1:8000', <String, dynamic>{
+    socket = IO.io('http://192.168.100.8:8000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
@@ -47,10 +58,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
     socket.on('receiveMessage', (data) {
       setState(() {
-        messages.insert(0, {
+        messages.add({
           'message': data['message'],
           'isMe': data['sender_id'] == widget.senderId,
+          'sentAt': DateTime.parse(data['sent_at']),
         });
+
+        messages.sort((a, b) => a['sentAt'].compareTo(b['sentAt']));
       });
     });
   }
@@ -64,15 +78,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         'message': msg,
       });
 
-      setState(() {
-        messages.insert(0, {
-          'message': msg,
-          'isMe': true,
-        });
-        messageController.clear();
-        log("Message Sent!");
-      });
+      messageController.clear();
+      log("Message Sent!");
     }
+  }
+
+  String formatTime(DateTime dateTime) {
+    return "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -85,11 +97,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 17, 17, 61),
       appBar: AppBar(
+        backgroundColor: const Color(0xffFFDE69),
         title: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.grey[300],
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               backgroundImage: NetworkImage(widget.targetUserProfilePic),
             ),
             const SizedBox(width: 10),
@@ -100,12 +114,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Chats
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ListView.builder(
-                  reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var currentMessage = messages[index];
@@ -116,19 +128,36 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: isMe
-                                ? Colors.grey
-                                : Theme.of(context).colorScheme.secondary,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            currentMessage['message'],
-                            style: const TextStyle(color: Colors.white),
+                        Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: isMe ? Colors.white : Colors.blue,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  currentMessage['message'],
+                                  style: TextStyle(
+                                    color: isMe ? Colors.black : Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  formatTime(currentMessage['sentAt']),
+                                  style: TextStyle(
+                                    color: isMe
+                                        ? Colors.black54
+                                        : const Color.fromARGB(179, 0, 0, 0),
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -137,27 +166,44 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                 ),
               ),
             ),
-
             Container(
-              color: Colors.grey[200],
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Row(
                 children: [
-                  Flexible(
-                    child: TextField(
-                      controller: messageController,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter message",
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(221, 255, 255, 255),
+                        borderRadius:
+                            BorderRadius.circular(30), // Bordes redondeados
+                      ),
+                      child: TextField(
+                        controller: messageController,
+                        maxLines: 1,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: "Type a message...",
+                          hintStyle:
+                              TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                          border: InputBorder.none, // Sin borde
+                        ),
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: sendMessage,
-                    icon: Icon(
-                      Icons.send,
-                      color: Theme.of(context).colorScheme.secondary,
+                  const SizedBox(width: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                      color: Color(0xffFFDE69),
+                      shape: BoxShape.circle,
+                    ),
+                    child: InkWell(
+                      onTap: sendMessage,
+                      child: const Icon(
+                        Icons.send,
+                        color: Color(0xff050522),
+                      ),
                     ),
                   ),
                 ],

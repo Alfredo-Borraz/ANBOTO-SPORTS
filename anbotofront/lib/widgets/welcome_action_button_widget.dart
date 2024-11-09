@@ -4,7 +4,6 @@ import 'package:anbotofront/widgets/custom_elevated_button_widget.dart';
 import 'package:anbotofront/widgets/login_bottom_sheet_body_widget.dart';
 import 'package:flutter/material.dart';
 
-
 class WelcomActionButtonWidget extends StatelessWidget {
   const WelcomActionButtonWidget({super.key});
 
