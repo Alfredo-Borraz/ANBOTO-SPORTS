@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     final url =
-        Uri.parse('http://192.168.100.8:8000/api/chat/sockets/conversaciones');
+        Uri.parse('http://192.168.1.2:8000/api/chat/sockets/conversaciones');
     final response = await http.get(
       url,
       headers: {
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     final url = Uri.parse(
-        'http://192.168.100.8:8000/api/chat/sockets/messages?userId=${currentUserId}&chatUserId=${chatUserId}');
+        'http://192.168.1.2:8000/api/chat/sockets/messages?userId=${currentUserId}&chatUserId=${chatUserId}');
     final response = await http.get(
       url,
       headers: {
@@ -84,9 +84,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xff050522),
       appBar: AppBar(
+        backgroundColor: const Color(0xffFFDE69),
         centerTitle: true,
-        title: const Text("Chat App"),
+        title:
+         const Text("Chat"),
+         shadowColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: SafeArea(
         child: ListView.builder(
@@ -103,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                     builder: (context) {
                       return ChatRoomPage(
                         targetUserName: conversation['name'],
-                        targetUserProfilePic: 'assets/images/user1.jpg',
+                        targetUserProfilePic: 'assets/images/profile_img1.png',
                         senderId: currentUserId!,
                         receiverId: conversation['chatUserId'],
                         msg: messages,
@@ -113,8 +117,9 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               leading: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/user1.jpg'),
+                backgroundImage: AssetImage('assets/images/profile_img1.png'),
               ),
+              textColor: Color.fromARGB(255, 255, 255, 255),
               title: Text(conversation['name']),
               subtitle: Text(conversation['lastMessage']),
             );
@@ -122,6 +127,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xffFFDE69),
         onPressed: () {
           Navigator.push(
             context,
@@ -132,7 +138,10 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
-        child: const Icon(Icons.search),
+        child: const Icon(
+          Icons.search,
+          color: Color(0xff050522),
+          ),
       ),
     );
   }

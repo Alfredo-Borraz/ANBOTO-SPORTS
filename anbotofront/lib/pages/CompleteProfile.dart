@@ -7,7 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CompleteProfile extends StatefulWidget {
-  const CompleteProfile({Key? key}) : super(key: key);
+  const CompleteProfile({super.key});
 
   @override
   _CompleteProfileState createState() => _CompleteProfileState();

@@ -5,19 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class UsuarioService {
-  final String baseUrl = 'http://192.168.100.8:8000/api/users';
+  final String baseUrl = 'http://192.168.1.2:8000/api/users';
   IO.Socket? socket;
 
   void initializeSocketConnection() {
-    socket = IO.io('http://192.168.100.8:8000', <String, dynamic>{
+    socket = IO.io('http://192.168.1.2:8000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
 
-    socket!.connect();
+    socket!.connect(); 
 
     socket!.onConnect((_) {
-      print('Conectado al servidor de sockets');
+      print('Conectado al servidor de sockets'); 
     });
 
     socket!.onDisconnect((_) {

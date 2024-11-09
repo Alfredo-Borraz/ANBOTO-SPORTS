@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -11,13 +10,13 @@ class ChatRoomPage extends StatefulWidget {
   final List<dynamic> msg;
 
   const ChatRoomPage({
-    Key? key,
+    super.key,
     required this.targetUserName,
     required this.targetUserProfilePic,
     required this.senderId,
     required this.receiverId,
     required this.msg,
-  }) : super(key: key);
+  });
 
   @override
   _ChatRoomPageState createState() => _ChatRoomPageState();
@@ -44,7 +43,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   void connectSocket() {
-    socket = IO.io('http://192.168.100.8:8000', <String, dynamic>{
+    socket = IO.io('http://192.168.1.2:8000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
@@ -83,6 +82,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     }
   }
 
+  String formatTime(DateTime dateTime) {
+    return "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+  }
+
   @override
   void dispose() {
     socket.dispose();
@@ -91,88 +94,122 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              backgroundImage: NetworkImage(widget.targetUserProfilePic),
-            ),
-            const SizedBox(width: 10),
-            Text(widget.targetUserName),
-          ],
-        ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color.fromARGB(255, 17, 17, 61),
+    appBar: AppBar(
+      backgroundColor: const Color(0xffFFDE69),
+      title: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            backgroundImage: NetworkImage(widget.targetUserProfilePic),
+          ),
+          const SizedBox(width: 10),
+          Text(widget.targetUserName),
+        ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    var currentMessage = messages[index];
-                    bool isMe = currentMessage['isMe'];
+    ),
+    body: SafeArea(
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  var currentMessage = messages[index];
+                  bool isMe = currentMessage['isMe'];
 
-                    return Row(
-                      mainAxisAlignment: isMe
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 2),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: isMe
-                                  ? Colors.grey
-                                  : Theme.of(context).colorScheme.secondary,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              currentMessage['message'],
-                              style: const TextStyle(color: Colors.white),
-                            ),
+                  return Row(
+                    mainAxisAlignment: isMe
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: isMe
+                                ? Colors.white  
+                                : Colors.blue,  
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                currentMessage['message'],
+                                style: TextStyle(
+                                  color: isMe ? Colors.black : Colors.white, 
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                formatTime(currentMessage['sentAt']),
+                                style: TextStyle(
+                                  color: isMe ? Colors.black54 : const Color.fromARGB(179, 0, 0, 0), 
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
-            Container(
-              color: Colors.grey[200],
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Row(
-                children: [
-                  Flexible(
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(221, 255, 255, 255), 
+                      borderRadius: BorderRadius.circular(30), // Bordes redondeados
+                    ),
                     child: TextField(
                       controller: messageController,
-                      maxLines: null,
+                      maxLines: 1,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter message",
+                        hintText: "Type a message...",
+                        hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                        border: InputBorder.none, // Sin borde
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: sendMessage,
-                    icon: Icon(
+                ),
+                const SizedBox(width: 10), 
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffFFDE69), 
+                    shape: BoxShape.circle, 
+                  ),
+                  child: InkWell(
+                    onTap: sendMessage,
+                    child: const Icon(
                       Icons.send,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Color(0xff050522), 
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
