@@ -8,8 +8,7 @@ Future<int?> getUserId() async {
 
   if (token != null) {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    return decodedToken[
-        'id']; // Asegúrate de que el campo 'id' sea correcto según tu token JWT
+    return decodedToken['id'];
   }
 
   return null;

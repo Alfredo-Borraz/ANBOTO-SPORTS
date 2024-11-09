@@ -1,10 +1,11 @@
 import 'package:anbotofront/helper/show_snack.dart';
+import 'package:anbotofront/services/usuario_service.dart';
+import 'package:anbotofront/torneos/screens/menu_torneo.dart';
 import 'package:anbotofront/utils/app_style.dart';
 import 'package:anbotofront/utils/validations.dart';
 import 'package:anbotofront/widgets/custom_elevated_button_widget.dart';
 import 'package:anbotofront/widgets/custom_text_form_field_widget.dart';
 import 'package:flutter/material.dart';
-
 
 class LoginFormWidget extends StatefulWidget {
   const LoginFormWidget({super.key});
@@ -20,6 +21,38 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   bool isChecked = false;
   bool isValidateCheckbox = false;
+  final UsuarioService usuarioService = UsuarioService();
+
+  Future<void> _login() async {
+    if (!isChecked) {
+      setState(() {
+        isValidateCheckbox = true;
+      });
+      return;
+    }
+
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+
+      String? message = await usuarioService.login(email, password);
+      print("Resultado del login: $message");
+
+      if (message == 'Inicio de sesión exitoso') {
+        showSnackBar(context, message ?? 'Inicio de sesion exitoso');
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MenuTorneo()),
+        );
+      } else {
+        showSnackBar(context, message ?? "Error al iniciar sesión");
+      }
+    } else {
+      autovalidateMode = AutovalidateMode.always;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +62,12 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
       child: Column(
         children: [
           CustomTextFormFieldWidget(
-            labelText: "Correo Electronico",
+            labelText: "Correo Electrónico",
             hintText: "info@example.com",
             controller: _emailController,
             validator: Validations.validateEmailOrUsername,
-            suffixFocusedIcon: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Color(0xff050522),
-            ),
-            suffixIcon: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Color(0xffA0936B),
-            ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           CustomTextFormFieldWidget(
             labelText: "Contraseña",
             hintText: "Escribe tu contraseña",
@@ -52,9 +75,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
             obscureText: true,
             validator: Validations.validatePassword,
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Row(
             children: [
               Checkbox(
@@ -73,21 +94,12 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     : AppStyle.styleRegular15,
               ),
               const Spacer(),
-              const Text('¿Se te olvido la contraseña?'),
+              const Text('¿Se te olvidó la contraseña?'),
             ],
           ),
           CustomElevatedButtonWidget(
             buttonText: "Login",
-            onPressed: () {
-              if (isChecked && _formKey.currentState!.validate()) {
-                Navigator.pop(context);
-                showSnackBar(context, "Login Success");
-              } else {
-                isValidateCheckbox = true;
-                autovalidateMode = AutovalidateMode.always;
-                setState(() {});
-              }
-            },
+            onPressed: _login,
             borderColor: const Color(0xff050522),
             width: 325,
           ),
