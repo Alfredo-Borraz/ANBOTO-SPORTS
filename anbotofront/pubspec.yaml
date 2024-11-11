@@ -42,6 +42,12 @@ dependencies:
   shared_preferences: ^2.0.6
   jwt_decoder: ^2.0.1
   http: ^1.2.2
+  country_flags: ^3.0.0
+  country_picker: ^2.0.14
+  material_design_icons_flutter: ^6.0.7096
+  phone_numbers_parser: ^9.0.1
+
+
 
 dev_dependencies:
   flutter_test:

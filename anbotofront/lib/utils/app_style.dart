@@ -1,5 +1,27 @@
 import 'package:flutter/material.dart';
 
+InputDecoration appStyle(hintText){
+  return InputDecoration(
+    hintText: hintText,
+    fillColor: Colors.transparent,
+    filled: true,
+    isDense: true,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(
+        width: 0.5,
+      ),
+      borderRadius: BorderRadius.circular(10.0)//phone,
+  ),
+  focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(
+        width: 1.3,
+      ),
+      borderRadius: BorderRadius.circular(16.0),
+    ),
+  );
+}
+
 abstract class AppStyle {
   static const TextStyle styleSemibold20 = TextStyle(
     color: Color(0xffFFDE69),
@@ -62,4 +84,12 @@ abstract class AppStyle {
     fontSize: 12,
     fontWeight: FontWeight.w400,
   );
+
+  static TextStyle font14GrayRegular = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: const Color.fromARGB(255, 0, 0, 0),
+  );
 }
+
+
