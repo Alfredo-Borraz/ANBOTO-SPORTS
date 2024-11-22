@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:anbotofront/helper/auth_utils.dart';
 import 'package:anbotofront/pages/ChatRoomPage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,8 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> searchUsers() async {
     final query = searchController.text.trim();
     if (query.isNotEmpty) {
-      final url =
-          Uri.parse('http://192.168.100.8:8000/api/users/search?query=$query');
+      final url = Uri.parse('http://192.168.1.2:8000/api/users/search?query=$query');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -59,14 +58,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff050522),
+      backgroundColor: const Color(0xff050522), 
       appBar: AppBar(
         title: const Text("Search"),
         backgroundColor: const Color(0xffFFDE69),
         elevation: 0,
         centerTitle: true,
-        foregroundColor: const Color(0xff050522),
-      ),
+        foregroundColor: const Color(0xff050522), 
+      ),  
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -91,11 +90,9 @@ class _SearchPageState extends State<SearchPage> {
                     hintText: "Email Address or Username",
                     hintStyle: TextStyle(color: Colors.grey[600]),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 15),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.search,
-                          color: Theme.of(context).colorScheme.secondary),
+                      icon: Icon(Icons.search, color: Theme.of(context).colorScheme.secondary),
                       onPressed: searchUsers,
                     ),
                   ),
@@ -134,16 +131,14 @@ class _SearchPageState extends State<SearchPage> {
                               child: Row(
                                 children: [
                                   const CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                        'assets/images/profile_img1.png'),
+                                    backgroundImage: AssetImage('assets/images/profile_img1.png'),
                                     backgroundColor: Colors.grey,
                                     radius: 25,
                                   ),
                                   const SizedBox(width: 15),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           user['username'],

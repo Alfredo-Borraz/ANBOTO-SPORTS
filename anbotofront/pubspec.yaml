@@ -42,11 +42,12 @@ dependencies:
   shared_preferences: ^2.0.6
   jwt_decoder: ^2.0.1
   http: ^1.2.2
-  google_fonts: ^4.0.1
-  flutter_bloc: ^8.1.1
-  flutter_blurhash: ^0.8.0        
-  pull_to_refresh: ^1.6.2             
-  dialog_alert: ^0.0.3
+  country_flags: ^3.0.0
+  country_picker: ^2.0.14
+  material_design_icons_flutter: ^6.0.7096
+  phone_numbers_parser: ^9.0.1
+
+
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
     - assets/images/user2.jpg
     - assets/images/user3.jpg
     - assets/images/profile_img1.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

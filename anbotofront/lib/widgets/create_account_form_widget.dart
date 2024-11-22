@@ -3,6 +3,7 @@ import 'package:anbotofront/services/usuario_service.dart';
 import 'package:anbotofront/utils/validations.dart';
 import 'package:anbotofront/widgets/custom_elevated_button_widget.dart';
 import 'package:anbotofront/widgets/custom_text_form_field_widget.dart';
+import 'package:anbotofront/widgets/phone_text_field_widget.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccountFormWidget extends StatefulWidget {
@@ -14,6 +15,8 @@ class CreateAccountFormWidget extends StatefulWidget {
 }
 
 class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
+  String? fullPhoneNumberValue;
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -58,11 +61,17 @@ class _CreateAccountFormWidgetState extends State<CreateAccountFormWidget> {
             validator: Validations.validateEmailOrUsername,
           ),
           const SizedBox(height: 20),
-          CustomTextFormFieldWidget(
+          PhoneTextField(
+            phoneController: _phoneController,
+            onChanged: (fullPhoneNumber){
+              fullPhoneNumberValue = fullPhoneNumber;
+            }
+            ),
+          /* CustomTextFormFieldWidget(
             labelText: "Teléfono",
             hintText: "+52 1234567890",
             controller: _phoneController,
-          ),
+          ), */
           const SizedBox(height: 20),
           CustomTextFormFieldWidget(
             labelText: "Contraseña",

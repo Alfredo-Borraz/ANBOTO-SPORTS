@@ -1,6 +1,6 @@
 import 'package:anbotofront/helper/show_snack.dart';
+import 'package:anbotofront/pages/HomePage.dart';
 import 'package:anbotofront/services/usuario_service.dart';
-import 'package:anbotofront/torneos/screens/menu_torneo.dart';
 import 'package:anbotofront/utils/app_style.dart';
 import 'package:anbotofront/utils/validations.dart';
 import 'package:anbotofront/widgets/custom_elevated_button_widget.dart';
@@ -43,7 +43,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MenuTorneo()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         showSnackBar(context, message ?? "Error al iniciar sesión");

@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     final url =
-        Uri.parse('http://192.168.100.8:8000/api/chat/sockets/conversaciones');
+        Uri.parse('http://192.168.1.2:8000/api/chat/sockets/conversaciones');
     final response = await http.get(
       url,
       headers: {
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     final url = Uri.parse(
-        'http://192.168.100.8:8000/api/chat/sockets/messages?userId=${currentUserId}&chatUserId=${chatUserId}');
+        'http://192.168.1.2:8000/api/chat/sockets/messages?userId=${currentUserId}&chatUserId=${chatUserId}');
     final response = await http.get(
       url,
       headers: {
@@ -88,8 +88,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xffFFDE69),
         centerTitle: true,
-        title: const Text("Chat"),
-        shadowColor: Color.fromARGB(255, 255, 255, 255),
+        title:
+         const Text("Chat"),
+         shadowColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: SafeArea(
         child: ListView.builder(
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(
           Icons.search,
           color: Color(0xff050522),
-        ),
+          ),
       ),
     );
   }
